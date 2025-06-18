@@ -1,0 +1,142 @@
+import java.util.Scanner;
+
+class Customer {
+    String name;
+    int cid;
+    int accno;
+    String branch;
+    String bank;
+    int inibal = 0;
+    int mypin = 5566;
+
+    public Customer(String name, int cid, int accno, String branch, String bank) {
+        this.name = name;
+        this.cid = cid;
+        this.accno = accno;
+        this.branch = branch;
+        this.bank = bank;
+    }
+
+    public void display() {
+        System.out.println("Name: " + this.name);
+        System.out.println("Cid: " + this.cid);
+        System.out.println("AccNo: " + this.accno);
+        System.out.println("Branch: " + this.branch);
+        System.out.println("Bank: " + this.bank);
+    }
+
+    public void deposit(int amount) {
+        if (amount > 0) {
+            inibal += amount;
+            System.out.println("Deposit of " + amount + " successful!");
+        } else {
+            System.out.println("Deposit amount must be greater than zero.");
+        }
+    }
+
+    public void withdraw(int pin, int amount) {
+        if (pin == mypin) {
+            if (amount <= inibal) {
+                inibal -= amount;
+                System.out.println("Withdrawal of " + amount + " successful!");
+            } else {
+                System.out.println("Insufficient Balance.");
+            }
+        } else {
+            System.out.println("Incorrect PIN.");
+        }
+    }
+
+    public void checkBalance(int pin) {
+        if (pin == mypin) {
+            System.out.println("Balance: " + inibal);
+        } else {
+            System.out.println("Incorrect PIN.");
+        }
+    }
+
+    public void changePin(int pin) {
+        if (pin == mypin) {
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter your new PIN: ");
+            int newPin = sc.nextInt();
+            mypin = newPin;
+            System.out.println("PIN changed successfully!");
+        } else {
+            System.out.println("Incorrect PIN.");
+        }
+    }
+}
+
+public class AtmApp {
+
+    public static void main(String args[]) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter your name: ");
+        String name = sc.nextLine();
+        System.out.println("Enter branch: ");
+        String branch = sc.nextLine();
+        System.out.println("Enter bank: ");
+        String bank = sc.nextLine();
+        System.out.println("Enter cid: ");
+        int cid = sc.nextInt();
+        System.out.println("Enter accno: ");
+        int accno = sc.nextInt();
+
+        Customer c1 = new Customer(name, cid, accno, branch, bank);
+        c1.display();
+
+        // ATM Operations
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("\nATM Menu:");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Check Balance");
+            System.out.println("4. Change PIN");
+            System.out.println("5. Exit");
+            System.out.print("Select an option: ");
+            int choice = sc.nextInt();
+            int pin;
+            int amount;
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter amount to deposit: ");
+                    amount = sc.nextInt();
+                    c1.deposit(amount);
+                    break;
+
+                case 2:
+                    System.out.print("Enter your PIN: ");
+                    pin = sc.nextInt();
+                    System.out.print("Enter amount to withdraw: ");
+                    amount = sc.nextInt();
+                    c1.withdraw(pin, amount);
+                    break;
+
+                case 3:
+                    System.out.print("Enter your PIN: ");
+                    pin = sc.nextInt();
+                    c1.checkBalance(pin);
+                    break;
+
+                case 4:
+                    System.out.print("Enter your PIN: ");
+                    pin = sc.nextInt();
+                    c1.changePin(pin);
+                    break;
+
+                case 5:
+                    System.out.println("Exiting ATM. Have a nice day!");
+                    exit = true;
+                    break;
+
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        }
+
+        sc.close(); // Closing the scanner to prevent resource leak
+    }
+}
